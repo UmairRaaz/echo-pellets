@@ -10,15 +10,22 @@ import toast from "react-hot-toast";
 
 const Page = () => {
   const router = useRouter();
-  const cartItem = JSON.parse(localStorage.getItem("cartItem"));
-  console.log(cartItem);
+  const [cartItem, setCartItem] = useState([]);
   const [customerData, setCustomerData] = useState({
     fullName: "",
     email: "",
     phoneNumber: "",
     address: ""
   });
-  
+
+  // Fetch cart items from localStorage on the client side
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedCartItem = JSON.parse(localStorage.getItem("cartItem"));
+      setCartItem(storedCartItem || []);
+    }
+  }, []);
+
   const totalPrice = cartItem?.reduce((total, item) => total + item.price * item.quantity, 0);
   const totalProducts = cartItem?.reduce((total, item) => total + 1 * item.quantity, 0);
 
@@ -43,9 +50,11 @@ const Page = () => {
     console.log(response);
     if (response.data.success) {
       toast("Order Placed", { icon: '😊' });
-      localStorage.removeItem("wishlist");
-      localStorage.removeItem("cart");
-      localStorage.removeItem("cartItem");
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("wishlist");
+        localStorage.removeItem("cart");
+        localStorage.removeItem("cartItem");
+      }
       router.replace("/ordercomplete");
     }
   };
@@ -55,7 +64,9 @@ const Page = () => {
   }, [userDetails, totalPrice, totalProducts]);
 
   useEffect(() => {
-    localStorage.setItem("cartItem", JSON.stringify(cartItem));
+    if (typeof window !== "undefined") {
+      localStorage.setItem("cartItem", JSON.stringify(cartItem));
+    }
   }, [cartItem]);
 
   return (

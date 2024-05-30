@@ -7,6 +7,7 @@ import ProductContext from "@/context/ProductContext";
 import { IoCartSharp } from "react-icons/io5";
 import { IoIosHeart, IoIosHome } from "react-icons/io";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import Image from "next/image";
 
 
 function NavbarSimple() {
@@ -46,12 +47,12 @@ function NavbarSimple() {
   return (
     <div className="navbar bg-base-100 fixed top-0 left-0 z-30 w-full">
       <div className="flex-1">
-        <a className="btn btn-ghost text-xl">
+        <span className="btn btn-ghost text-xl">
           <Link href="/">
             <span style={{ color: "green", fontSize: "1.2em" }}>E</span>cho{" "}
             <span style={{ color: "green", fontSize: "1.2em" }}>P</span>ellets
           </Link>
-        </a>
+        </span>
       </div>
       <div className="flex-none">
         <div className="hidden lg:flex justify-center w-full">
@@ -85,9 +86,11 @@ function NavbarSimple() {
 
 
               <div className="relative">
-                <img
+                <Image
                   src="/profile.png" // Replace with your default image path
                   alt="Profile"
+                  width={32}
+                  height={32}
                   className="w-8 h-8 rounded-full cursor-pointer"
                   onClick={toggleDropdown}
                 />
@@ -161,9 +164,11 @@ function NavbarSimple() {
                 </Link>
 
                 <div className="relative ">
-                <img
+                <Image
                   src="/profile.png" // Replace with your default image path
                   alt="Profile"
+                  width={32}
+                  height={32}
                   className="w-8 h-8 rounded-full cursor-pointer"
                   onClick={toggleDropdown}
                 />
@@ -174,7 +179,7 @@ function NavbarSimple() {
                         <li className=" text-xs  px-2 py-2 border-b">Name: {userDetails.name}</li>
                         <li className=" text-xs font-medium px-2 py-2 border-b">Email: {userDetails.email}</li>
                         <li className="text-xs  py-2 border-b">
-                            <a href="/ordercomplete" className="text-green-800 ">View Orders</a>
+                            <Link href="/ordercomplete" className="text-green-800 ">View Orders</Link>
                         </li>
                         <li className="px-4 py-2">
                           <button
