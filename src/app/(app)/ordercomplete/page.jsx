@@ -6,15 +6,12 @@ import { useEffect, useState } from "react";
 
 const OrderDetails = () => {
     const [orders, setOrders] = useState([]);
-    const [userDetails, setUserDetails] = useState({});
+    const [userDetails, setUserDetails] = useState(null);
     const [loading, setLoading] = useState(true);
-
-    console.log("orders", orders);
 
     const getUserDetails = async () => {
         try {
             const response = await axios.get("/api/isAdmin");
-            console.log(response.data.data);
             setUserDetails(response.data.data);
         } catch (error) {
             console.error("Failed to fetch user details:", error);
@@ -23,11 +20,10 @@ const OrderDetails = () => {
 
     const getOrderDetails = async () => {
         try {
-            if (userDetails.email) {
+            if (userDetails?.email) {
                 const response = await axios.post("/api/getUserOrders", {
                     userEmail: userDetails.email
                 });
-                console.log(response.data);
                 setOrders(response.data.orders);
             }
         } catch (error) {
@@ -46,8 +42,10 @@ const OrderDetails = () => {
     }, []);
 
     useEffect(() => {
-        if (userDetails.email) {
+        if (userDetails && userDetails.email) {
             getOrderDetails();
+        } else {
+            setLoading(false); // Set loading to false if userDetails is null or undefined
         }
     }, [userDetails]);
 
@@ -81,7 +79,7 @@ const OrderDetails = () => {
                                     <p><strong>Price:</strong> Rs {product.price}</p>
                                     <p><strong>Quantity:</strong> {product.quantity}</p>
                                     <p><strong>Total:</strong> Rs {product.price * product.quantity}</p>
-                                    <p className="text-md mt-1 uppercase">{product.productCategory } : {product.productFor} </p>
+                                    <p className="text-md mt-1 uppercase">{product.productCategory} : {product.productFor}</p>
                                 </div>
                             </div>
                         ))}
