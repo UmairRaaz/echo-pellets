@@ -10,7 +10,7 @@ const TrendingProducts = () => {
   const { productData, wishlist } = useContext(ProductContext);
   useEffect(() => {
 
-    const filterProduct = productData.slice(0, 3)
+    const filterProduct = productData?.slice(0, 3)
     setproducts(filterProduct);
 
 

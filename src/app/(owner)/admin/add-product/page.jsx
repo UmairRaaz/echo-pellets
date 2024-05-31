@@ -12,31 +12,10 @@ const AdminPage = () => {
   const router = useRouter()
   const [loading, setloading] = useState(true)
   const [isAdmin, setisAdmin] = useState(false);
-  const getUserData = async () => {
-    try {
-      const response = await axios.get("/api/isAdmin");
-      console.log("response: ", response.data.data.isAdmin);
-      if (response.data.data.isAdmin) {
-        setisAdmin(true);
-        setloading(false)
-      } else {
-        setisAdmin(false);
-        router.push("/")
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  console.log("isAdmin", isAdmin);
-  useEffect(() => {
-    getUserData();
-  }, [isAdmin]);
+ 
   return (
     <>
-      <div>
-        {loading && "Loading"}
-      </div>
-      <div className={`bg-white shadow-lg ${isAdmin ? "block" : "hidden"}`}>
+      <div className={`bg-white shadow-lg`}>
         <UploadProduct  />
       </div>
     </>

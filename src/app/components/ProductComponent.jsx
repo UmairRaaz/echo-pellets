@@ -71,7 +71,7 @@ const ProductComponent = ({
       <div className="flex justify-center text-center  w-full  items-center p-2 border-gray-200 ">
         {isInCartList ? (
         
-            <a href={"/cart"} className="btn bg-white  btn-sm w-full text-center py-2 px-4 border  border-black  text-black rounded-lg hover:bg-black hover:text-white transition-colors duration-300">Go to Cart</a>
+            <Link href={"/cart"} className="btn bg-white  btn-sm w-full text-center py-2 px-4 border  border-black  text-black rounded-lg hover:bg-black hover:text-white transition-colors duration-300">Go to Cart</Link>
           
         ) : (
           <button

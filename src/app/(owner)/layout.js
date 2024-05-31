@@ -1,10 +1,11 @@
 export const metadata = {
-  title: "Buy-It App",
-  description: "Developed By Umair Ali",
+  title: "Echo-Pellets",
+  description: "Developed By Moon",
 };
 import DashboardSidebar from "../components/DashboardSidebar";
 import "../globals.css"
 export default function RootLayout({ children }) {
+  
  return (
     <html lang="en">
       <body>

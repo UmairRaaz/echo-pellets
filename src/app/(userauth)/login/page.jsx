@@ -22,26 +22,25 @@ const LoginPage = () => {
       const response = await axios.post("/api/login", loginUserData);
       console.log("response", response);
       setloginLoading(false);
-      console.log(response);
       if (response.data.success) {
         setloginUserData({
           email: "",
           password: "",
         });
         setuserNotFound(false);
-        router.push("/checkout");
+        router.back(); // Navigate back
+        setTimeout(() => {
+          window.location.reload(true); // Reload after a short delay
+        }, 100);
       }
     } catch (error) {
       console.log("error while login", error);
-      if (error) {
-        console.log(error);
-        setuserNotFound(true);
-        setloginLoading(false);
-        setloginUserData({
-          email: "",
-          password: "",
-        });
-      }
+      setuserNotFound(true);
+      setloginLoading(false);
+      setloginUserData({
+        email: "",
+        password: "",
+      });
     }
   }
 
@@ -50,7 +49,7 @@ const LoginPage = () => {
       <div className="w-full max-w-md p-8 space-y-8 bg-white shadow-2xl rounded-lg">
         <h2 className="text-4xl font-extrabold text-center text-gray-900">Welcome Back!</h2>
         <h2 className="text-md text-center text-gray-600">Login to access your account</h2>
-        
+
         <form className="space-y-6" onSubmit={handleLogin}>
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
@@ -63,7 +62,7 @@ const LoginPage = () => {
               onChange={(e) => setloginUserData({ ...loginUserData, email: e.target.value })}
             />
           </div>
-          
+
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
             <input
@@ -75,23 +74,22 @@ const LoginPage = () => {
               onChange={(e) => setloginUserData({ ...loginUserData, password: e.target.value })}
             />
           </div>
-          
+
           {userNotFound && (
             <p className="text-sm text-red-400">Please enter correct email and password</p>
           )}
-          
+
           <div>
             <button
               type="submit"
               disabled={loginLoading}
               className="w-full py-3 mt-4 text-dark btn btn-dark border border-black bg-gradient-to-r from-dark-500 to-white-600 rounded-lg hover:from-dark-600 hover:to-white-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition duration-200 font-semibold"
             >
-         
               {loginLoading ? "Loading..." : "Login"}
             </button>
           </div>
         </form>
-        
+
         <div className="flex gap-1 mt-4 justify-center">
           <p>Not a member?</p>
           <Link href={"/signup"} className="text-blue-700">SignUp Here</Link>

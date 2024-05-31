@@ -7,6 +7,7 @@ import 'react-date-range/dist/theme/default.css';
 import { DateRangePicker } from 'react-date-range';
 import Modal from 'react-modal';
 import { AiOutlineShoppingCart, AiOutlineOrderedList, AiOutlineUser, AiOutlineDollarCircle, AiOutlineTeam } from 'react-icons/ai';
+import { useRouter } from "next/navigation";
 
 
 const Dashboard = () => {
@@ -19,7 +20,11 @@ const Dashboard = () => {
   const [startDate, setStartDate] = useState(new Date(new Date().setFullYear(new Date().getFullYear() - 1)).toISOString());
   const [endDate, setEndDate] = useState(new Date());
   const [modalIsOpen, setModalIsOpen] = useState(false);
-
+  const router = useRouter()
+  const [loading, setloading] = useState(true)
+  const [isAdmin, setisAdmin] = useState(false);
+ 
+ 
   const getDetails = async () => {
     const productResponse = await axios.post("/api/getAllProducts", {
       params: {

@@ -7,7 +7,7 @@ export async function GET(req) {
     try {
        
         const products = await Product.find({})
-        console.log(products)
+        // console.log(products)
         if (!products) {
             return NextResponse.json({ message: "product doesnot found", products: [], success: false, status: 400 })
         }
