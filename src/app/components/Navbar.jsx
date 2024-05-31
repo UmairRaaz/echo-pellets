@@ -101,7 +101,7 @@ function NavbarSimple() {
                         <li className=" text-xs  px-2 py-2 border-b">Name: {userDetails.name}</li>
                         <li className=" text-xs font-medium px-2 py-2 border-b">Email: {userDetails.email}</li>
                         <li className="text-xs  py-2 border-b">
-                            <a href="/ordercomplete" className="text-green-800 ">View Orders</a>
+                            <Link href="/ordercomplete" className="text-green-800 ">View Orders</Link>
                         </li>
                         <li className="px-4 py-2">
                           <button
@@ -115,7 +115,7 @@ function NavbarSimple() {
                     ) : (
                       <li className="px-4 py-2">
                        
-                          <a href="/login" className="btn text-sm btn-sm btn-dark border-black">Login</a>
+                          <Link href="/login" className="btn text-sm btn-sm btn-dark border-black">Login</Link>
                  
                       </li>
                     )}
@@ -193,7 +193,7 @@ function NavbarSimple() {
                     ) : (
                       <li className="px-4 py-2">
                        
-                          <a href="/login" className="btn btn-dark btn-sm border-black">Login</a>
+                          <Link href="/login" className="btn btn-dark btn-sm border-black">Login</Link>
                  
                       </li>
                     )}
