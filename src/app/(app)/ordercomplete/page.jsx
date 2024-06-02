@@ -2,20 +2,32 @@
 
 import axios from "axios";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { useRouter } from "next/navigation"; 
+import ProductContext from "@/context/ProductContext";
 
 const OrderDetails = () => {
+    const { setisLoggedIn, isLoggedIn, wishlist, cart } = useContext(ProductContext);
     const [orders, setOrders] = useState([]);
     const [userDetails, setUserDetails] = useState(null);
     const [loading, setLoading] = useState(true);
+    const router = useRouter();
+    
 
     const getUserDetails = async () => {
         try {
             const response = await axios.get("/api/isAdmin");
-            setUserDetails(response.data.data);
-            console.log("userDetails ordercomplete",response.data.data);
+            if (response.data.data) {
+                setUserDetails(response.data.data);
+                setisLoggedIn(true);
+            } else {
+                setisLoggedIn(false);
+            }
         } catch (error) {
             console.error("Failed to fetch user details:", error);
+            setisLoggedIn(false);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -40,7 +52,8 @@ const OrderDetails = () => {
             await getUserDetails();
         };
         fetchDetails();
-    }, []);
+        console.log("ordercomplete:" ,isLoggedIn)
+    }, [isLoggedIn]);
 
     useEffect(() => {
         if (userDetails && userDetails.email) {
@@ -50,9 +63,14 @@ const OrderDetails = () => {
         }
     }, [userDetails]);
 
+    if(!isLoggedIn){
+        return router.push("/")
+    }
+
     if (loading) {
         return <div className="h-screen w-full flex items-center justify-center mt-20">Loading...</div>;
     }
+
 
     if (!loading && orders.length === 0) {
         return <div className="h-screen w-full flex items-center justify-center mt-20">No Orders</div>;

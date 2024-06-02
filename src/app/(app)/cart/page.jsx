@@ -9,7 +9,7 @@ const WishListPage = () => {
   const { cart, cartItem } = useContext(ProductContext);
 
   const totalPrice = cartItem.reduce((total, item) => total + item.price * item.quantity, 0);
-
+  console.log(cartItem)
   useEffect(() => {
     localStorage.setItem("cartItem", JSON.stringify(cartItem));
   }, [cartItem]);

@@ -1,4 +1,5 @@
-"use client";
+'use client';
+import ProductContext from "@/context/ProductContext";
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,6 +9,7 @@ import toast from "react-hot-toast";
 
 const Page = () => {
   const router = useRouter();
+  const { setisLoggedIn, isLoggedIn } = useContext(ProductContext);
   const [cartItem, setCartItem] = useState([]);
   const [customerData, setCustomerData] = useState({
     fullName: "",
@@ -22,6 +24,7 @@ const Page = () => {
   useEffect(() => {
     if (typeof window !== "undefined") {
       const storedCartItem = JSON.parse(localStorage.getItem("cartItem"));
+      console.log("Fetched cart items from localStorage:", storedCartItem);
       setCartItem(storedCartItem || []);
     }
   }, []);
@@ -32,35 +35,41 @@ const Page = () => {
   const userDetails = useCallback(async () => {
     try {
       const userData = await axios.get("/api/isAdmin");
-      if (!userData.data.success) {
+      if (!isLoggedIn) {
         setLoading(false);
         setIsAuthenticated(false);
+        setisLoggedIn(false);
         return router.push("/login");
       }
-      console.log("userDetails checkoutpage",userData.data.data);
+      setisLoggedIn(true);
+      console.log("userDetails checkoutpage", userData.data.data);
       const { name, email } = userData.data.data;
       setCustomerData(prevData => ({ ...prevData, fullName: name, email: email }));
-      setIsAuthenticated(true);
     } catch (error) {
       console.error("Error fetching user details", error);
       setIsAuthenticated(false);
+      setisLoggedIn(false);
       router.push("/login");
     } finally {
       setLoading(false);
     }
-  }, [router]);
+  }, [router, isLoggedIn, setisLoggedIn]);
 
   const handleOrderSubmit = async (e) => {
     e.preventDefault();
-    const response = await axios.post("/api/order", { customerData, cartItem, totalPrice });
-    if (response.data.success) {
-      toast("Order Placed", { icon: '😊' });
-      if (typeof window !== "undefined") {
-        localStorage.removeItem("wishlist");
-        localStorage.removeItem("cart");
-        localStorage.removeItem("cartItem");
+    try {
+      const response = await axios.post("/api/order", { customerData, cartItem, totalPrice });
+      if (response.data.success) {
+        toast("Order Placed", { icon: '😊' });
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("wishlist");
+          localStorage.removeItem("cart");
+          localStorage.removeItem("cartItem");
+        }
+        router.replace("/ordercomplete");
       }
-      router.replace("/ordercomplete");
+    } catch (error) {
+      console.error("Error placing order:", error);
     }
   };
 
@@ -68,18 +77,14 @@ const Page = () => {
     userDetails();
   }, [userDetails]);
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("cartItem", JSON.stringify(cartItem));
-    }
-  }, [cartItem]);
+
 
   if (loading) {
     return <div>Loading...</div>;
   }
 
-  if (!isAuthenticated) {
-    router.push("/login")
+  if (!isLoggedIn) {
+    return router.push("/login");
   }
 
   return (

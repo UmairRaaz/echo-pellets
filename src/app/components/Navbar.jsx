@@ -14,9 +14,9 @@ function NavbarSimple() {
   const [isOpen, setIsOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [userDetails, setuserDetails] = useState({})
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter();
-  const { wishlist, cart } = useContext(ProductContext);
+  const {setisLoggedIn, isLoggedIn, wishlist, cart } = useContext(ProductContext);
 
   const getCookies = async () => {
     try {
@@ -24,24 +24,25 @@ function NavbarSimple() {
       if (response.data.data) {
         setuserDetails(response.data.data);
         console.log("userDetails navbar",response.data.data);
-        setIsLoggedIn(true);
+        setisLoggedIn(true);
       } else {
-        setIsLoggedIn(false);
+        setisLoggedIn(false);
       }
     } catch (error) {
       console.error("Error fetching user details:", error);
-      setIsLoggedIn(false);
+      setisLoggedIn(false);
     }
   };
 
   useEffect(() => {
     getCookies();
-  }, []);
+    console.log("isloggedIn: ",isLoggedIn)
+  }, [isLoggedIn]);
 
   const logoutHandler = async () => {
     try {
       await axios.get("/api/logout");
-      setIsLoggedIn(false);
+      setisLoggedIn(false);
       setuserDetails({});
       router.replace("/");
       window.location.reload(true);
