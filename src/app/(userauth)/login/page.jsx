@@ -27,6 +27,7 @@ const LoginPage = () => {
           email: "",
           password: "",
         });
+        localStorage.setItem("isLoggedIn", true);
         setuserNotFound(false);
         router.back(); // Navigate back
         setTimeout(() => {
@@ -35,6 +36,7 @@ const LoginPage = () => {
       }
     } catch (error) {
       console.log("error while login", error);
+      localStorage.removeItem("isLoggedIn", true);
       setuserNotFound(true);
       setloginLoading(false);
       setloginUserData({

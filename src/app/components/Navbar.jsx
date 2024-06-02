@@ -9,26 +9,28 @@ import { IoIosHeart, IoIosHome } from "react-icons/io";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 
-
 function NavbarSimple() {
   const [isOpen, setIsOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [userDetails, setuserDetails] = useState({})
-  // const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userDetails, setuserDetails] = useState({});
   const router = useRouter();
-  const {setisLoggedIn, isLoggedIn, wishlist, cart } = useContext(ProductContext);
+  const { setisLoggedIn, isLoggedIn, wishlist, cart } =
+    useContext(ProductContext);
 
   const getCookies = async () => {
     try {
       const response = await axios.get("/api/isAdmin");
       if (response.data.data) {
         setuserDetails(response.data.data);
-        console.log("userDetails navbar",response.data.data);
+        console.log("userDetails navbar", response.data.data);
         setisLoggedIn(true);
+        localStorage.setItem("isLoggedIn", true);
       } else {
         setisLoggedIn(false);
+        localStorage.removeItem("isLoggedIn");
       }
     } catch (error) {
+      localStorage.removeItem("isLoggedIn");
       console.error("Error fetching user details:", error);
       setisLoggedIn(false);
     }
@@ -36,14 +38,21 @@ function NavbarSimple() {
 
   useEffect(() => {
     getCookies();
-    console.log("isloggedIn: ",isLoggedIn)
-  }, [isLoggedIn]);
+    const loggedInStatus = localStorage.getItem("isLoggedIn");
+    if (loggedInStatus) {
+      setisLoggedIn(true);
+      getCookies();
+    } else {
+      setisLoggedIn(false);
+    }
+  }, []);
 
   const logoutHandler = async () => {
     try {
       await axios.get("/api/logout");
       setisLoggedIn(false);
       setuserDetails({});
+      localStorage.removeItem("isLoggedIn");
       router.replace("/");
       window.location.reload(true);
     } catch (error) {
@@ -98,8 +107,6 @@ function NavbarSimple() {
               </Link>
             </li>
             <li>
-
-
               <div className="relative">
                 <Image
                   src="/profile.png" // Replace with your default image path
@@ -110,13 +117,25 @@ function NavbarSimple() {
                   onClick={toggleDropdown}
                 />
                 {isDropdownOpen && (
-                  <ul className="absolute right-0 mt-2 py-2 w-48 bg-white border rounded shadow-lg" style={{ top: '100%' }}>
+                  <ul
+                    className="absolute right-0 mt-2 py-2 w-48 bg-white border rounded shadow-lg"
+                    style={{ top: "100%" }}
+                  >
                     {isLoggedIn ? (
                       <>
-                        <li className=" text-xs  px-2 py-2 border-b">Name: {userDetails.name}</li>
-                        <li className=" text-xs font-medium px-2 py-2 border-b">Email: {userDetails.email}</li>
+                        <li className=" text-xs  px-2 py-2 border-b">
+                          Name: {userDetails.name}
+                        </li>
+                        <li className=" text-xs font-medium px-2 py-2 border-b">
+                          Email: {userDetails.email}
+                        </li>
                         <li className="text-xs  py-2 border-b">
-                            <Link href="/ordercomplete" className="text-green-800 ">View Orders</Link>
+                          <Link
+                            href="/ordercomplete"
+                            className="text-green-800 "
+                          >
+                            View Orders
+                          </Link>
                         </li>
                         <li className="px-4 py-2">
                           <button
@@ -129,9 +148,12 @@ function NavbarSimple() {
                       </>
                     ) : (
                       <li className="px-4 py-2">
-                       
-                          <Link href="/login" className="btn text-sm btn-sm btn-dark border-black">Login</Link>
-                 
+                        <Link
+                          href="/login"
+                          className="btn text-sm btn-sm btn-dark border-black"
+                        >
+                          Login
+                        </Link>
                       </li>
                     )}
                   </ul>
@@ -141,7 +163,6 @@ function NavbarSimple() {
           </ul>
         </div>
 
-        
         <button className="btn btn-ghost lg:hidden" onClick={toggleSidebar}>
           <Bars3Icon className="h-6 w-6" />
         </button>
@@ -179,52 +200,58 @@ function NavbarSimple() {
                 </Link>
 
                 <div className="relative ">
-                <Image
-                  src="/profile.png" // Replace with your default image path
-                  alt="Profile"
-                  width={32}
-                  height={32}
-                  className="w-8 h-8 rounded-full cursor-pointer"
-                  onClick={toggleDropdown}
-                />
-                {isDropdownOpen && (
-                  <ul className="absolute right-0 mt-2 py-2 w-48 bg-white border rounded shadow-lg" style={{ top: '100%' }}>
-                    {isLoggedIn ? (
-                      <>
-                        <li className=" text-xs  px-2 py-2 border-b">Name: {userDetails.name}</li>
-                        <li className=" text-xs font-medium px-2 py-2 border-b">Email: {userDetails.email}</li>
-                        <li className="text-xs  py-2 border-b">
-                            <Link href="/ordercomplete" className="text-green-800 ">View Orders</Link>
-                        </li>
+                  <Image
+                    src="/profile.png" // Replace with your default image path
+                    alt="Profile"
+                    width={32}
+                    height={32}
+                    className="w-8 h-8 rounded-full cursor-pointer"
+                    onClick={toggleDropdown}
+                  />
+                  {isDropdownOpen && (
+                    <ul
+                      className="absolute right-0 mt-2 py-2 w-48 bg-white border rounded shadow-lg"
+                      style={{ top: "100%" }}
+                    >
+                      {isLoggedIn ? (
+                        <>
+                          <li className=" text-xs  px-2 py-2 border-b">
+                            Name: {userDetails.name}
+                          </li>
+                          <li className=" text-xs font-medium px-2 py-2 border-b">
+                            Email: {userDetails.email}
+                          </li>
+                          <li className="text-xs  py-2 border-b">
+                            <Link
+                              href="/ordercomplete"
+                              className="text-green-800 "
+                            >
+                              View Orders
+                            </Link>
+                          </li>
+                          <li className="px-4 py-2">
+                            <button
+                              onClick={logoutHandler}
+                              className="btn btn-dark btn-sm border-black  text-sm"
+                            >
+                              Logout
+                            </button>
+                          </li>
+                        </>
+                      ) : (
                         <li className="px-4 py-2">
-                          <button
-                            onClick={logoutHandler}
-                            className="btn btn-dark btn-sm border-black  text-sm"
+                          <Link
+                            href="/login"
+                            className="btn btn-dark btn-sm border-black"
                           >
-                            Logout
-                          </button>
+                            Login
+                          </Link>
                         </li>
-                      </>
-                    ) : (
-                      <li className="px-4 py-2">
-                       
-                          <Link href="/login" className="btn btn-dark btn-sm border-black">Login</Link>
-                 
-                      </li>
-                    )}
-                  </ul>
-                )}
-              </div>
-
-
+                      )}
+                    </ul>
+                  )}
+                </div>
               </li>
-
-
-             
-              
-              
-
-
             </ul>
           </div>
         </div>

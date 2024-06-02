@@ -19,11 +19,13 @@ const ProductContextProvider = ({ children }) => {
         const wishedProducts = JSON.parse(localStorage.getItem("wishlist"));
         const cartLocal = JSON.parse(localStorage.getItem("cart"));
         const cartItemLocal = JSON.parse(localStorage.getItem("cartItem"));
+        const isLoggedInLocal = JSON.parse(localStorage.getItem("isLoggedIn"));
 
         if (storedProducts) setProductData(storedProducts);
         if (wishedProducts) setWishlist(wishedProducts);
         if (cartLocal) setCart(cartLocal);
         if (cartItemLocal) setCartItem(cartItemLocal);
+        if (isLoggedInLocal) setisLoggedIn(isLoggedInLocal);
     }, []);
 
     return (

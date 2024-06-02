@@ -24,6 +24,8 @@ const Page = () => {
   useEffect(() => {
     if (typeof window !== "undefined") {
       const storedCartItem = JSON.parse(localStorage.getItem("cartItem"));
+      const isLoggedInStatus = localStorage.getItem("isLoggedIn");
+      setIsAuthenticated(isLoggedInStatus)
       console.log("Fetched cart items from localStorage:", storedCartItem);
       setCartItem(storedCartItem || []);
     }
@@ -35,13 +37,6 @@ const Page = () => {
   const userDetails = useCallback(async () => {
     try {
       const userData = await axios.get("/api/isAdmin");
-      if (!isLoggedIn) {
-        setLoading(false);
-        setIsAuthenticated(false);
-        setisLoggedIn(false);
-        return router.push("/login");
-      }
-      setisLoggedIn(true);
       console.log("userDetails checkoutpage", userData.data.data);
       const { name, email } = userData.data.data;
       setCustomerData(prevData => ({ ...prevData, fullName: name, email: email }));
@@ -53,7 +48,7 @@ const Page = () => {
     } finally {
       setLoading(false);
     }
-  }, [router, isLoggedIn, setisLoggedIn]);
+  }, [router, setisLoggedIn]);
 
   const handleOrderSubmit = async (e) => {
     e.preventDefault();
@@ -83,7 +78,7 @@ const Page = () => {
     return <div>Loading...</div>;
   }
 
-  if (!isLoggedIn) {
+  if (!isAuthenticated) {
     return router.push("/login");
   }
 

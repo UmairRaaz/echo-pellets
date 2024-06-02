@@ -8,11 +8,21 @@ import ProductContext from "@/context/ProductContext";
 
 const OrderDetails = () => {
     const { setisLoggedIn, isLoggedIn, wishlist, cart } = useContext(ProductContext);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [orders, setOrders] = useState([]);
     const [userDetails, setUserDetails] = useState(null);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
     
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            const isLoggedInStatus = localStorage.getItem("isLoggedIn");
+            setIsAuthenticated(isLoggedInStatus);
+            if (!isLoggedInStatus) {
+                router.push("/"); 
+            }
+        }
+    }, []);
 
     const getUserDetails = async () => {
         try {
@@ -63,15 +73,14 @@ const OrderDetails = () => {
     }, [userDetails]);
 
     useEffect(() => {
-        if (typeof window !== "undefined" && !isLoggedIn) {
-            router.push("/");
+        if (typeof window !== "undefined") {
+            localStorage.setItem("isLoggedIn", isAuthenticated);
         }
-    }, [isLoggedIn, router]);
+    }, [isAuthenticated]);
 
     if (loading) {
         return <div className="h-screen w-full flex items-center justify-center mt-20">Loading...</div>;
     }
-
 
     if (!loading && orders.length === 0) {
         return <div className="h-screen w-full flex items-center justify-center mt-20">No Orders</div>;
