@@ -37,7 +37,7 @@ const Page = () => {
         setIsAuthenticated(false);
         return router.push("/login");
       }
-      console.log("userDetails checkoutpage",response.data.data);
+      console.log("userDetails checkoutpage",userData.data.data);
       const { name, email } = userData.data.data;
       setCustomerData(prevData => ({ ...prevData, fullName: name, email: email }));
       setIsAuthenticated(true);
