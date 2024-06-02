@@ -30,14 +30,14 @@ export async function POST(NextRequest) {
             isAdmin : user.isAdmin,
         }
 
-        //generate jwt token
+        // generate jwt token
         // const token = await  jwt.sign( tokenData, process.env.SECRET_KEY, {expiresIn : "1d"})
         const jwtToken = await new jose.SignJWT(tokenData)
             .setProtectedHeader({ alg: 'HS256' })
             .setIssuedAt()
             .setExpirationTime('1d')
             .sign(new TextEncoder().encode(`secret-key-phrase`));
-        // console.log("jose token", jwtToken)
+        console.log("jose token", jwtToken)
         const response = NextResponse.json({ message: "user login successfully", success: true })
 
         // send with response in cookies

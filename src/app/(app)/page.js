@@ -18,7 +18,6 @@ export default function Home() {
       try {
         const response = await axios.get("/api/getProductsForCustomer");
         setProductData(response.data.products);
-        console.log("products", response.data.products);
         localStorage.setItem("products", JSON.stringify(response.data.products));
       } catch (error) {
         console.error("Error fetching products:", error);

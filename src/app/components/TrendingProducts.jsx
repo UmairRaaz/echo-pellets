@@ -15,7 +15,6 @@ const TrendingProducts = () => {
 
 
   }, [productData]);
-  console.log(productData)
   return (
     <div className="min-h-[50vh] w-[80%] mx-auto ">
       <h1 className='text-3xl text-gray-700  my-4 font-semibold text-center'><span className='border-b-2 pb-2 border-gray-500 mb-8 '>Products</span></h1>

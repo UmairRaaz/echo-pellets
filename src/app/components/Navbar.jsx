@@ -19,10 +19,18 @@ function NavbarSimple() {
   const { wishlist, cart } = useContext(ProductContext);
 
   const getCookies = async () => {
-    const response = await axios.get("/api/isAdmin");
-    if (response.data.data) {
-      setuserDetails(response.data.data)
-      setIsLoggedIn(true);
+    try {
+      const response = await axios.get("/api/isAdmin");
+      if (response.data.data) {
+        setuserDetails(response.data.data);
+        console.log("userDetails navbar",response.data.data);
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+      }
+    } catch (error) {
+      console.error("Error fetching user details:", error);
+      setIsLoggedIn(false);
     }
   };
 
@@ -31,9 +39,15 @@ function NavbarSimple() {
   }, []);
 
   const logoutHandler = async () => {
-    await axios.get("/api/logout");
-    router.replace("/");
-    window.location.reload(true);
+    try {
+      await axios.get("/api/logout");
+      setIsLoggedIn(false);
+      setuserDetails({});
+      router.replace("/");
+      window.location.reload(true);
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
   };
 
   const toggleSidebar = () => {

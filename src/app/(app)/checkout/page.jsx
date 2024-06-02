@@ -1,6 +1,4 @@
 "use client";
-import ProductContext from "@/context/ProductContext";
-import { getDataFromCookie } from "@/helpers/getDataFromCookie";
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
@@ -17,6 +15,8 @@ const Page = () => {
     phoneNumber: "",
     address: ""
   });
+  const [loading, setLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   // Fetch cart items from localStorage on the client side
   useEffect(() => {
@@ -32,22 +32,27 @@ const Page = () => {
   const userDetails = useCallback(async () => {
     try {
       const userData = await axios.get("/api/isAdmin");
-      console.log(userData);
       if (!userData.data.success) {
+        setLoading(false);
+        setIsAuthenticated(false);
         return router.push("/login");
       }
+      console.log("userDetails checkoutpage",response.data.data);
       const { name, email } = userData.data.data;
       setCustomerData(prevData => ({ ...prevData, fullName: name, email: email }));
+      setIsAuthenticated(true);
     } catch (error) {
       console.error("Error fetching user details", error);
-      // router.push("/login");
+      setIsAuthenticated(false);
+      router.push("/login");
+    } finally {
+      setLoading(false);
     }
   }, [router]);
 
   const handleOrderSubmit = async (e) => {
     e.preventDefault();
     const response = await axios.post("/api/order", { customerData, cartItem, totalPrice });
-    console.log(response);
     if (response.data.success) {
       toast("Order Placed", { icon: '😊' });
       if (typeof window !== "undefined") {
@@ -61,13 +66,21 @@ const Page = () => {
 
   useEffect(() => {
     userDetails();
-  }, [userDetails, totalPrice, totalProducts]);
+  }, [userDetails]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       localStorage.setItem("cartItem", JSON.stringify(cartItem));
     }
   }, [cartItem]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!isAuthenticated) {
+    router.push("/login")
+  }
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-white-400 to-dark-600 mt-20 p-4">

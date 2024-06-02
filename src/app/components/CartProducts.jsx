@@ -25,7 +25,6 @@ const CartProducts = ({
   } = useContext(ProductContext);
 
   const [quantity, setQuantity] = useState(1);
-  console.log("cart on product componet",  cart)
   const handleWishList = (id) => {
     const productToAdd = productData.find(
       (product) => product?._id === productId

@@ -13,6 +13,7 @@ const OrderDetails = () => {
         try {
             const response = await axios.get("/api/isAdmin");
             setUserDetails(response.data.data);
+            console.log("userDetails ordercomplete",response.data.data);
         } catch (error) {
             console.error("Failed to fetch user details:", error);
         }
