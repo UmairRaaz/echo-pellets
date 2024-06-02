@@ -52,20 +52,21 @@ const OrderDetails = () => {
             await getUserDetails();
         };
         fetchDetails();
-        console.log("ordercomplete:" ,isLoggedIn)
-    }, [isLoggedIn]);
+    }, []);
 
     useEffect(() => {
         if (userDetails && userDetails.email) {
             getOrderDetails();
         } else {
-            setLoading(false); // Set loading to false if userDetails is null or undefined
+            setLoading(false); 
         }
     }, [userDetails]);
 
-    if(!isLoggedIn){
-        return router.push("/")
-    }
+    useEffect(() => {
+        if (typeof window !== "undefined" && !isLoggedIn) {
+            router.push("/");
+        }
+    }, [isLoggedIn, router]);
 
     if (loading) {
         return <div className="h-screen w-full flex items-center justify-center mt-20">Loading...</div>;
